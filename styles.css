@@ -167,3 +167,44 @@ button:hover {
   margin-top: 5px;
   margin-bottom: 10px;
 }
+
+.export-buttons {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.export-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  transition: opacity 0.5s;
+  z-index: 200;
+}
+
+.export-notification.info {
+  background-color: #48cae4;
+}
+
+.export-notification.success {
+  background-color: #32cd32;
+}
+
+.export-notification.warning {
+  background-color: #ffd700;
+  color: #0d1b2a;
+}
+
+.export-notification.error {
+  background-color: #ef476f;
+}
