@@ -117,4 +117,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Project Link: [https://github.com/username/gravmap](https://github.com/username/gravmap)
+Project Link: [https://github.com/username/gravmap](https://github.com/edisedis777/GravMap)
