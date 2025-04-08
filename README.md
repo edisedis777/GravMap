@@ -105,7 +105,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Contact
 
-Project Link: [https://github.com/username/gravmap](https://github.com/edisedis777/GravMap)
+Project Link: [https://github.com/edisedis777/GravMap/tree/main](https://github.com/edisedis777/GravMap)
 
 ## License
 
