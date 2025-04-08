@@ -25,7 +25,7 @@ GravMap is an interactive web-based tool that visualizes organizational relation
 
 ## Live Demo
 
-[View the live demo](https://username.github.io/gravmap/)
+[View the live demo](https://edisedis777.github.io/gravmap/)
 
 ## How It Works
 
@@ -94,18 +94,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Janna Bastow for the original gravity maps concept
-- Physics simulation inspired by various force-directed graph algorithms
-- Starfield background effect inspired by space visualization techniques
-
----
-
 ## To-Do / Future Enhancements
 
 - [ ] Add ability to save and load organizational maps
@@ -118,3 +106,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 
 Project Link: [https://github.com/username/gravmap](https://github.com/edisedis777/GravMap)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
