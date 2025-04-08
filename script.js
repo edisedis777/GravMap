@@ -303,6 +303,7 @@ class GravMap {
     this.hoveredNode = null;
     this.centralNode = null;
     this.animation = null;
+    this.isMobile = window.innerWidth <= 768;
 
     this.initEventListeners();
     this.updateCentralNode();
@@ -310,6 +311,80 @@ class GravMap {
     this.updateUINodeList();
     this.updateRelationshipOptions();
     this.createExportButtons();
+    this.initMobileFeatures();
+  }
+
+  initMobileFeatures() {
+    // Add panel toggle functionality for mobile
+    const panelToggle = document.getElementById("panel-toggle");
+    const gravMapContainer = document.getElementById("gravmap-container");
+
+    // Hide panel toggle on desktop
+    if (!this.isMobile) {
+      panelToggle.style.display = "none";
+    }
+
+    panelToggle.addEventListener("click", () => {
+      gravMapContainer.classList.toggle("panel-collapsed");
+      panelToggle.textContent = gravMapContainer.classList.contains(
+        "panel-collapsed"
+      )
+        ? "☰"
+        : "✕";
+    });
+
+    // Add touch event handlers
+    this.canvas.addEventListener(
+      "touchstart",
+      this.handleTouchStart.bind(this),
+      { passive: false }
+    );
+    this.canvas.addEventListener("touchmove", this.handleTouchMove.bind(this), {
+      passive: false,
+    });
+    this.canvas.addEventListener("touchend", this.handleTouchEnd.bind(this));
+  }
+
+  handleTouchStart(e) {
+    e.preventDefault(); // Prevent scrolling when interacting with canvas
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const rect = this.canvas.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+
+      for (let i = this.nodes.length - 1; i >= 0; i--) {
+        if (this.nodes[i].isPointInside(x, y)) {
+          this.draggedNode = this.nodes[i];
+          this.draggedNode.isDragging = true;
+          if (this.draggedNode.id !== this.centralNode?.id) {
+            this.draggedNode.orbitRadius = 0;
+            this.draggedNode.orbitVisible = false;
+          }
+          return;
+        }
+      }
+    }
+  }
+
+  handleTouchMove(e) {
+    e.preventDefault(); // Prevent scrolling when dragging
+    if (e.touches.length === 1 && this.draggedNode) {
+      const touch = e.touches[0];
+      const rect = this.canvas.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+
+      this.draggedNode.x = x;
+      this.draggedNode.y = y;
+    }
+  }
+
+  handleTouchEnd(e) {
+    if (this.draggedNode) {
+      this.draggedNode.isDragging = false;
+      this.draggedNode = null;
+    }
   }
 
   createExportButtons() {
@@ -320,14 +395,16 @@ class GravMap {
     pdfButton.id = "export-pdf-btn";
     pdfButton.className = "export-btn";
     pdfButton.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> PDF';
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>' +
+      (this.isMobile ? "" : " PDF");
     pdfButton.addEventListener("click", this.exportToPDF.bind(this));
 
     const pngButton = document.createElement("button");
     pngButton.id = "export-png-btn";
     pngButton.className = "export-btn";
     pngButton.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> PNG';
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>' +
+      (this.isMobile ? "" : " PNG");
     pngButton.addEventListener("click", this.exportToPNG.bind(this));
 
     exportContainer.appendChild(pdfButton);
@@ -364,6 +441,7 @@ class GravMap {
     }, 100);
   }
 
+  // Export to PNG
   exportToPNG() {
     this.showExportNotification("Exporting as PNG...");
     try {
