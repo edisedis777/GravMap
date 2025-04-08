@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GravMap - Organizational Influence Visualization</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="gravmap-container">
+      <div id="canvas-container">
+        <canvas id="gravmap-canvas"></canvas>
+      </div>
+      <div id="input-panel">
+        <h1>GravMap</h1>
+        <p>Organizational Influence Visualization</p>
+
+        <div class="panel-section">
+          <h2>Add New Node</h2>
+          <div id="error-container" class="error-message"></div>
+
+          <label for="node-name">Name:</label>
+          <input
+            type="text"
+            id="node-name"
+            placeholder="e.g., CEO, Designer..." />
+
+          <label for="influence-score">Influence (1-10):</label>
+          <input
+            type="number"
+            id="influence-score"
+            min="1"
+            max="10"
+            value="5" />
+
+          <label>Relationships:</label>
+          <div class="multi-select-container">
+            <div id="relationships-select" class="relationships-select"></div>
+          </div>
+
+          <button id="add-node-btn">Add Node</button>
+          <button id="randomize-btn">Randomize</button>
+        </div>
+
+        <div class="panel-section">
+          <h2>Current Nodes</h2>
+          <div id="node-list"></div>
+        </div>
+      </div>
+    </div>
+    <div id="tooltip" class="tooltip"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
