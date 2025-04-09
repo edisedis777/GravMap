@@ -7,7 +7,8 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 
-# **UNDER DEVELOPMENT**
+![Screenshot](https://github.com/user-attachments/assets/e84a370e-d27d-4038-9ebc-39ea9f73ab05)
+
 
 ## Overview
 
