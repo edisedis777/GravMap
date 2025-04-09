@@ -288,7 +288,7 @@ class Node {
     const distance = Math.sqrt(
       Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2)
     );
-    return distance <= this.radius;
+    return distance <= this.radius * 1.5; // Increased hit area for mobile
   }
 }
 
@@ -303,7 +303,11 @@ class GravMap {
     this.hoveredNode = null;
     this.centralNode = null;
     this.animation = null;
-    this.isMobile = window.innerWidth <= 768;
+    this.isMobile = window.matchMedia("(max-width: 768px)").matches;
+    this.lastTapTime = 0;
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+    this.isPanelDragging = false;
 
     this.initEventListeners();
     this.updateCentralNode();
@@ -315,6 +319,15 @@ class GravMap {
   }
 
   initMobileFeatures() {
+    // Add panel handle for dragging
+    const inputPanel = document.getElementById("input-panel");
+    const panelHandle = document.createElement("div");
+    panelHandle.id = "panel-handle";
+    if (this.isMobile) {
+      panelHandle.classList.add("bounce");
+      inputPanel.insertBefore(panelHandle, inputPanel.firstChild);
+    }
+
     // Add panel toggle functionality for mobile
     const panelToggle = document.getElementById("panel-toggle");
     const gravMapContainer = document.getElementById("gravmap-container");
@@ -333,6 +346,29 @@ class GravMap {
         : "✕";
     });
 
+    // Setup panel drag functionality
+    if (this.isMobile) {
+      panelHandle.addEventListener(
+        "touchstart",
+        this.handlePanelTouchStart.bind(this)
+      );
+      document.addEventListener(
+        "touchmove",
+        this.handlePanelTouchMove.bind(this),
+        { passive: false }
+      );
+      document.addEventListener(
+        "touchend",
+        this.handlePanelTouchEnd.bind(this)
+      );
+
+      // Initially collapse the panel on mobile
+      setTimeout(() => {
+        gravMapContainer.classList.add("panel-collapsed");
+        panelToggle.textContent = "☰";
+      }, 1500);
+    }
+
     // Add touch event handlers
     this.canvas.addEventListener(
       "touchstart",
@@ -343,15 +379,78 @@ class GravMap {
       passive: false,
     });
     this.canvas.addEventListener("touchend", this.handleTouchEnd.bind(this));
+
+    // Handle orientation changes
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => {
+        this.resizeCanvas();
+        this.updateCentralNode();
+      }, 300);
+    });
+  }
+
+  handlePanelTouchStart(e) {
+    if (e.touches.length === 1) {
+      this.isPanelDragging = true;
+      this.touchStartY = e.touches[0].clientY;
+      const gravMapContainer = document.getElementById("gravmap-container");
+      this.isPanelCollapsed =
+        gravMapContainer.classList.contains("panel-collapsed");
+    }
+  }
+
+  handlePanelTouchMove(e) {
+    if (!this.isPanelDragging || e.touches.length !== 1) return;
+
+    e.preventDefault();
+    const currentY = e.touches[0].clientY;
+    const deltaY = currentY - this.touchStartY;
+
+    const gravMapContainer = document.getElementById("gravmap-container");
+    const inputPanel = document.getElementById("input-panel");
+
+    if (
+      (this.isPanelCollapsed && deltaY < -50) ||
+      (!this.isPanelCollapsed && deltaY > 50)
+    ) {
+      gravMapContainer.classList.toggle("panel-collapsed");
+      document.getElementById("panel-toggle").textContent =
+        gravMapContainer.classList.contains("panel-collapsed") ? "☰" : "✕";
+      this.isPanelDragging = false;
+    }
+  }
+
+  handlePanelTouchEnd() {
+    this.isPanelDragging = false;
   }
 
   handleTouchStart(e) {
     e.preventDefault(); // Prevent scrolling when interacting with canvas
+
     if (e.touches.length === 1) {
       const touch = e.touches[0];
       const rect = this.canvas.getBoundingClientRect();
       const x = touch.clientX - rect.left;
       const y = touch.clientY - rect.top;
+
+      this.touchStartX = x;
+      this.touchStartY = y;
+
+      const now = new Date().getTime();
+      const timeSince = now - this.lastTapTime;
+
+      // Check for double tap (for showing info tooltip on mobile)
+      if (timeSince < 300) {
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+          if (this.nodes[i].isPointInside(x, y)) {
+            this.hoveredNode = this.nodes[i];
+            this.updateTooltip(touch);
+            return;
+          }
+        }
+      }
+
+      this.lastTapTime = now;
 
       for (let i = this.nodes.length - 1; i >= 0; i--) {
         if (this.nodes[i].isPointInside(x, y)) {
@@ -369,14 +468,29 @@ class GravMap {
 
   handleTouchMove(e) {
     e.preventDefault(); // Prevent scrolling when dragging
-    if (e.touches.length === 1 && this.draggedNode) {
+    if (e.touches.length === 1) {
       const touch = e.touches[0];
       const rect = this.canvas.getBoundingClientRect();
       const x = touch.clientX - rect.left;
       const y = touch.clientY - rect.top;
 
-      this.draggedNode.x = x;
-      this.draggedNode.y = y;
+      if (this.draggedNode) {
+        this.draggedNode.x = x;
+        this.draggedNode.y = y;
+      }
+
+      // Hide tooltip after dragging a certain distance
+      if (this.hoveredNode) {
+        const dx = x - this.touchStartX;
+        const dy = y - this.touchStartY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 20) {
+          const tooltip = document.getElementById("tooltip");
+          tooltip.style.opacity = "0";
+          this.hoveredNode = null;
+        }
+      }
     }
   }
 
@@ -384,6 +498,15 @@ class GravMap {
     if (this.draggedNode) {
       this.draggedNode.isDragging = false;
       this.draggedNode = null;
+    }
+
+    // Clear tooltip after a delay
+    if (this.hoveredNode) {
+      setTimeout(() => {
+        const tooltip = document.getElementById("tooltip");
+        tooltip.style.opacity = "0";
+        this.hoveredNode = null;
+      }, 500);
     }
   }
 
@@ -441,7 +564,6 @@ class GravMap {
     }, 100);
   }
 
-  // Export to PNG
   exportToPNG() {
     this.showExportNotification("Exporting as PNG...");
     try {
@@ -692,6 +814,12 @@ class GravMap {
         }
       });
     }
+  }
+
+  resizeCanvas() {
+    this.canvas.width = this.canvas.clientWidth;
+    this.canvas.height = this.canvas.clientHeight;
+    this.updateCanvasDimensions(this.canvas.width, this.canvas.height);
   }
 
   animate() {
