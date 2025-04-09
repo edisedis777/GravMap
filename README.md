@@ -18,10 +18,10 @@ GravMap is an interactive web-based tool that visualizes organizational relation
 
 - **Physics-Based Visualization**: Nodes (people) interact through simulated gravitational forces based on influence scores and relationships
 - **Dynamic Relationships**: Connect individuals to visualize reporting lines and cross-functional relationships
-- **Interactive Interface**: Drag, hover, and explore the network to gain insights about organizational dynamics
-- **Real-Time Updates**: Add and remove nodes with immediate visual feedback
+- **Interactive Interface**: Drag, hover, and explore the network
+- **Real-Time Updates**: Add and remove nodes
 - **Influence Gradient**: Visual representation of influence levels through color coding and node size
-- **Beautiful UI**: Starry background and glowing node effects create an engaging experience
+- **Beautiful UI**: Starry background and glowing node effects 
 
 ## Live Demo
 
@@ -37,15 +37,12 @@ GravMap uses a custom physics engine to simulate organizational dynamics:
    - Relationships: Connections to other nodes
 
 2. **Physics**:
-   - All nodes have a slight repulsion force to prevent overlapping
    - Related nodes attract each other, with force proportional to combined influence
    - The most influential node becomes the "central node" that others orbit around
    - Nodes with lower influence tend to orbit those with higher influence
 
 3. **Visual Cues**:
    - Node size represents influence
-   - Color gradient from light blue (lower influence) to dark red (higher influence)
-   - Connection line thickness indicates relationship strength
 
 ## Getting Started
 
@@ -80,9 +77,6 @@ GravMap is built with pure JavaScript, HTML and CSS. The visualization uses the 
 - `styles.css`: Visual styling and layout
 - `index.html`: Application structure and UI elements
 
-## Inspiration
-
-GravMap was inspired by the article [Gravity Maps: An Alternative to Org Charts](https://www.leadinginproduct.com/p/gravity-maps-an-alternative-to-org-charts) by Janna Bastow. The article describes how traditional org charts fail to capture the complex dynamics of modern organizations and proposes gravity maps as a more nuanced representation.
 
 ## Contributing
 
@@ -94,18 +88,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## To-Do / Future Enhancements
 
-- [ ] Add ability to save and load organizational maps
-- [ ] Add export functionality (PNG, PDF)
-- [ ] Implement node grouping by department/team
-- [ ] Add filtering options
-- [ ] Create mobile-responsive design
-- [ ] Add data import from CSV/Excel
+## Credits
 
-## Contact
+GravMap was inspired by the article [Gravity Maps: An Alternative to Org Charts](https://www.leadinginproduct.com/p/gravity-maps-an-alternative-to-org-charts) by Janna Bastow. The article describes how traditional org charts fail to capture the complex dynamics of modern organizations and proposes gravity maps as a more nuanced representation.
 
-Project Link: [https://github.com/edisedis777/GravMap/tree/main](https://github.com/edisedis777/GravMap)
 
 ## License
 
