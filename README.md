@@ -25,7 +25,7 @@ GravMap is an interactive web-based tool that visualizes organizational relation
 
 ## Live Demo
 
-[View the live demo](https://edisedis777.github.io/gravmap/)
+[View the live demo](https://edisedis777.github.io/GravMap/)
 
 ## How It Works
 
