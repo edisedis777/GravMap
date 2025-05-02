@@ -4,7 +4,6 @@
 [![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=fff)](#)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)
 [![Markdown](https://img.shields.io/badge/Markdown-%23000000.svg?logo=markdown&logoColor=white)](#)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 
 ![Screenshot](https://github.com/user-attachments/assets/e84a370e-d27d-4038-9ebc-39ea9f73ab05)
@@ -96,5 +95,5 @@ GravMap was inspired by the article [Gravity Maps: An Alternative to Org Charts]
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Distributed under the GNU Affero General Public License v3.0 License. See `LICENSE` for more information.
 
